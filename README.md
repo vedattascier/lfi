@@ -1,5 +1,5 @@
 
-# 🕵️‍♂️ LFI Scanner (Local File Inclusion Vulnerability Scanner)
+# 🕵️‍♂️ LFI Tarayıcı (Local File Inclusion Vulnerability Scanner)
 
 Bu Python aracı, web uygulamalarında **LFI (Local File Inclusion)** güvenlik açıklarını taramak için geliştirilmiştir. Basit ama etkili bir şekilde belirli bir URL ve parametre üzerinde LFI payload'larını deneyerek zafiyet olup olmadığını kontrol eder.
 
@@ -15,8 +15,8 @@ Bu Python aracı, web uygulamalarında **LFI (Local File Inclusion)** güvenlik 
 
 ```bash
 
-https://github.com/vedattascier/lfi.py.git
-cd LFI-Scanner
+https://github.com/vedattascier/lfi.git
+cd lfi
 pip install -r requirements.txt
 ```
 
@@ -43,12 +43,12 @@ python lfi_scanner.py
 ```plaintext
 Hedef URL'yi girin: http://example.com/view.php
 Parametre adını girin: page
-Payload dosyasının adını girin: lfi_payloads.txt
+Payload dosyasının adını girin: wordlist.txt
 ```
 
 ---
 
-## 📝 Payload Dosyası Formatı (`lfi_payloads.txt`)
+## 📝 Payload Dosyası Formatı (`wordlist.txt`)
 
 Her satırda bir payload olacak şekilde hazırlanmalıdır. Örnek içerik:
 
