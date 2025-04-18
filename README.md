@@ -32,12 +32,12 @@ Program çalıştıktan sonra senden şu bilgileri ister:
 
 - 🔗 **Hedef URL** (örn: `http://example.com/page.php`)
 - 🧩 **Parametre İsmi** (örn: `file`)
-- 📄 **Payload Dosyası** (örn: `lfi_payloads.txt`)
+- 📄 **Payload Dosyası** (örn: `wordlist.txt`)
 
 ### Örnek:
 
 ```bash
-python lfi_scanner.py
+python lfi.py
 ```
 
 ```plaintext
