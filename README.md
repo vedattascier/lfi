@@ -1,80 +1,129 @@
+# lfi
 
-# 🕵️‍♂️ LFI Tarayıcı (Local File Inclusion Vulnerability Scanner)
+![lfi Banner](./assets/banner.png)
 
-Bu Python aracı, web uygulamalarında **LFI (Local File Inclusion)** güvenlik açıklarını taramak için geliştirilmiştir. Basit ama etkili bir şekilde belirli bir URL ve parametre üzerinde LFI payload'larını deneyerek zafiyet olup olmadığını kontrol eder.
+
 
 ---
 
-## 🚀 Kurulum
+## Proje Hakkında
 
-### Gereksinimler
-- Python 3.6+
-- `requests` ve `colorama` kütüphaneleri
+**lfi**, Python 3 ile yazılmış, asenkron (asyncio) tabanlı bir Local File Inclusion (LFI) tarama aracıdır. Hedef web uygulamasının `file` parametresi üzerinden LFI açıklıkları tespit etmek için özelleştirilebilir bir wordlist ve etkileşimli mod desteği sunar.
 
-### Kurulum Adımları
+## Özellikler
+
+- Asenkron HTTP istekleri ile yüksek hızda tarama.
+- Özelleştirilebilir payload wordlist (`wordlist.txt`).
+- Çoklu User-Agent desteği.
+- Eşzamanlı istek sayısı ve zaman aşımı ayarı.
+- Konsol tabanlı ilerleme çubuğu ve renkli çıktı (Rich, Colorama).
+- Bulunan açıklıkları TXT, JSON ve CSV formatlarında loglama.
+- Hata yönetimi ve temiz çıkış (signal handling).
+
+## Ön Koşullar
+
+- Python 3.8 veya üzeri
+- Aşağıdaki Python paketleri:
+  - `aiohttp`
+  - `aiofiles`
+  - `rich`
+  - `colorama`
+
+Kurulum için pip kullanabilirsiniz:
 
 ```bash
-
-https://github.com/vedattascier/lfi.git
-cd lfi
 pip install -r requirements.txt
 ```
 
----
+`requirements.txt` içeriği:
 
-## ⚙️ Kullanım
+```
+aiohttp
+aiofiles
+rich
+colorama
+```
+
+## Kurulum
+
+1. Depoyu klonlayın:
+
+   ```bash
+   git clone https://github.com/kullanici/lfi.git
+   cd lfi
+   ```
+
+2. Gerekli paketleri yükleyin:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. (Opsiyonel) `assets/banner.png` gibi projenize ait görselleri ekleyin.
+
+## Kullanım
 
 ```bash
-python lfi.py
+python3 lfi.py [OPTIONS]
 ```
 
-Program çalıştıktan sonra senden şu bilgileri ister:
+### Parametreler
 
-- 🔗 **Hedef URL** (örn: `http://example.com/page.php`)
-- 🧩 **Parametre İsmi** (örn: `file`)
-- 📄 **Payload Dosyası** (örn: `wordlist.txt`)
+| Kısa | Uzun             | Açıklama                                                                                         | Varsayılan                      |
+|------|------------------|-------------------------------------------------------------------------------------------------|---------------------------------|
+| -u   | --url            | Hedef site URL'si (parametreli). Örnek: `http://example.com/page.php?file=`                    | (Zorunlu veya etkileşimli giriş)|
+| -w   | --wordlist       | Wordlist dosyasının yolu. Örnek: `wordlist.txt`                                                  | `wordlist.txt` (varsa)          |
+| -c   | --concurrency    | Eşzamanlı istek sayısı                                                                          | 50                              |
+| -to  | --timeout        | HTTP isteği zaman aşımı (saniye)                                                                | 10                              |
+| -k   | --keywords       | Aranacak metin anahtar kelimeleri listesi                                                       | `["root:x", "[fonts]", "MZ"]` |
+| -ua  | --useragent      | Kullanılacak User-Agent numarası (1–3 arası)                                                    | 1                               |
+| -v   | --verbose        | Detaylı çıktı (istek başına durum bilgisi)                                                      | Kapalı                          |
+| -o   | --output         | Sonuçların kaydedileceği dizin                                                                  | `.`                             |
 
-### Örnek:
+### Etkileşimli Mod
+
+Parametreler verilmezse, aracın konsol arayüzü `URL` ve `wordlist.txt` bilgilerini isteyerek çalışır.
 
 ```bash
-python lfi.py
+python3 lfi.py
 ```
 
-```plaintext
-Hedef URL'yi girin: http://example.com/view.php
-Parametre adını girin: page
-Payload dosyasının adını girin: wordlist.txt
-```
+### Örnekler
 
----
+1. Basit tarama:
 
-## 📝 Payload Dosyası Formatı (`wordlist.txt`)
+   ```bash
+   python3 lfi.py -u "http://hedef.com/index.php?file=" -w wordlist.txt
+   ```
 
-Her satırda bir payload olacak şekilde hazırlanmalıdır. Örnek içerik:
+2. Yüksek paralellik ve kısa timeout ile:
 
-```
-../../../../etc/passwd
-../../../../../../windows/win.ini
-....//....//....//....//etc/shadow
-../../../../proc/self/environ
-```
+   ```bash
+   python3 lfi.py -u "http://hedef.com/page.php?file=" -w wordlist.txt -c 100 -to 5 -v
+   ```
 
----
+3. Özel User-Agent seçimi:
 
-## 🔍 Örnek Çıktı
+   ```bash
+   python3 lfi.py -u "http://hedef.com/?include=" -ua 2
+   ```
 
-```plaintext
-[i] Scanning http://example.com/view.php with param 'page'...
-[+] Vulnerable: http://example.com/view.php?page=../../../../etc/passwd
-[-] Error accessing: http://example.com/view.php?page=....//....//proc/self/environ
-```
+## Çıktılar ve Log Dosyaları
 
----
+Tarama tamamlandığında `--output` parametresi ile belirlenen klasörde aşağıdaki dosyalar oluşturulur:
 
-## 🛡️ Güvenlik Notu
+- `bulunan_aciklar_<timestamp>.txt`
+- `bulunan_aciklar_<timestamp>.json`
+- `bulunan_aciklar_<timestamp>.csv`
+- `scanner_debug_<timestamp>.log` (debug ve hata bilgileri)
 
-Bu araç sadece **eğitim** ve **pentest** amaçlı kullanılmalıdır. İzin almadan bir sisteme uygulamak **yasal suçtur**.
+## Katkıda Bulunanlar
 
----
+- **Vedat Taşçıer** – Proje Geliştirici ve Tasarımcı
 
+Katkıda bulunmak veya hata bildirmek için lütfen pull request gönderin veya issue açın.
+
+## Lisans
+
+Bu proje MIT lisansı altında sunulmaktadır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
