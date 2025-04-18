@@ -1,9 +1,4 @@
 # lfi
-
-![lfi Banner](./assets/banner.png)
-
-
-
 ---
 
 ## Proje Hakkında
