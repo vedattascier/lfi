@@ -1,4 +1,4 @@
-# lfi
+# LFI TARAYICI
 ---
 
 ## Proje Hakkında
