@@ -44,7 +44,7 @@ colorama
 1. Depoyu klonlayın:
 
    ```bash
-   git clone https://github.com/kullanici/lfi.git
+   git clone https://github.com/vedattascier/lfi.git
    cd lfi
    ```
 
@@ -54,7 +54,6 @@ colorama
    pip install -r requirements.txt
    ```
 
-3. (Opsiyonel) `assets/banner.png` gibi projenize ait görselleri ekleyin.
 
 ## Kullanım
 
